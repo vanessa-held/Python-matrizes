@@ -54,8 +54,8 @@ def matriz_nula(nlinhas, ncols):
     return M
 
 def transposta(M):
-    nlinhas = len(M)
-    ncolunas = len(M[0])
+    nlinhas = len(M)  # Conta quantas linhas existem
+    ncolunas = len(M[0])  # Conta quantos elementos têm em uma linha
     T = matriz_nula(ncolunas, nlinhas)
     for i in range(nlinhas):
         for j in range(ncolunas):
@@ -77,7 +77,7 @@ def matriz_inversa2(m):
    
     return b
 
-def matrix_tamplate(m):
+def matrix_tamplate(m): #cria o formato da matriz
     resultado = [[0, 0],[0, 0]]
     resultado [0][0] = m[1][1]
     resultado [0][1] = - m[0][1]
@@ -88,8 +88,8 @@ def matrix_tamplate(m):
 
 
 
-
-def subtrair(a,b):
+#função de subtração entre duas matrizes
+def subtrair(a,b): 
     return somar(a,mult_escalar(b,-1))
     
 
