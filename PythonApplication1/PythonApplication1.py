@@ -117,6 +117,7 @@ if __name__ == '__main__':
     #Resposta 4 (A*A-1) = In#
     r4 = matriz_mult(Matriz_A,matriz_inversa2(Matriz_A))
     print(f"Resultado questão 4:\n {r4}\n")
+    print(f' Resultado Matriz inversa: \n{matriz_inversa2(Matriz_A)}')
 
     #Resposta  (b + At * C-1 -Bt) = In#
     r5 = matriz_mult(transposta(Matriz_A), matriz_inversa2(Matriz_C)) # At*C-1
