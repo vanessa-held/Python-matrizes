@@ -107,8 +107,8 @@ if __name__ == '__main__':
     r2 = somar(somar(Matriz_A, Matriz_B), mult_escalar(Matriz_C,4))
     print(f"Resultado questão 2:\n {r2}\n")
 
-    #Resposta 3 [A+(B.Ct])*B-1]#
-    r3 = matriz_mult(Matriz_B,transposta(Matriz_C))
+    #Resposta 3 [A+(B-Ct])*B-1]#
+    r3 = subtrair(Matriz_B,transposta(Matriz_C))
     r3 = somar(Matriz_A,r3)
     r3 = matriz_mult(r3,matriz_inversa2(Matriz_B))
     print(f"Resultado questão 3:\n {r3}\n")
