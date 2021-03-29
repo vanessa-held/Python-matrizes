@@ -32,16 +32,14 @@ def lista_exercicios_matriz():
     print (f"Resultado questão 5:\n {r5}\n")
 
 def lista_exercios_determinante():
-    pass
 
-if __name__ == '__main__':
     # lista_exercicios_matriz()
     #lista_exercicios_determinate()
     
     
-     """matriz = informar_matriz()
+     matriz = informar_matriz()
      imprimir_determinante(matriz)
-     """
+     
      Matriz_A = [[1, -1, 0], [2, 3, 4],[0, 1, -2]]
      Matriz_B = [[2, 7, 2], [8, -1, -3],[-1, 9, 5]]
 
@@ -51,3 +49,24 @@ if __name__ == '__main__':
      print(soma_b_at)
      final = mult_escalar(soma_b_at,det_a)
      print(f"Resultado questão 2:\n {final}")
+
+def lista_exercicios_laplace():
+    pass
+   
+if __name__ == '__main__':
+    
+    #Questão A: informar matriz desejada.
+    matriz = informar_matriz()
+    print(f"matriz informada:\n {matriz}")
+
+    #Questão B: Contenha uma função que faça uma verificação se com as matrizes digitadas é possível calcular os determinantes dessas matrizes;
+    print("a função que determina o cofator é a função: verifica_matriz")
+
+    #Questão C: Calcule o Co-fator dos elementos
+    print("a função que determina o cofator é a função: co_fator")
+
+    #Questão D: Contenha uma função que calcule os determinantes de matrizes de qualquer ordem;
+    print("a função que determina o cofator é a função: det_matriz")
+
+    #Questão E: Verificação de calculo da matriz.
+    imprimir_determinante(matriz)

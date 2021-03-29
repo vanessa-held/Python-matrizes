@@ -123,6 +123,14 @@ def cria_matriz_cofator(matriz, linha, col):
     return matriz_nova
 
 
+def co_fator(matriz,linha,col):
+    item = matriz[linha][col] # pegando os elementos da coluna 0
+    cofator = 0
+    if item != 0:  #se o item igual a zero não realiza o calculo
+        mult = (-1)**(linha+col) # potencia do co-fator
+        cofator = mult * item * det_matriz(cria_matriz_cofator(matriz, linha, col)) # calculo recursivo do co-fator
+    return cofator
+
 """
     Resolução de determinante por Teorema de Laplace
 """
@@ -137,10 +145,7 @@ def det_matriz(matriz):
     col = 0 # fixando coluna em 0
     soma = 0 
     for linha in range(tam): 
-        item = matriz[linha][col] # pegando os elementos da coluna 0
-        if item != 0:  #se o item igual a zero não realiza o calculo
-            mult = (-1)**(linha+col) # potencia do co-fator
-            soma += mult * item * det_matriz(cria_matriz_cofator(matriz, linha, col)) # calculo recursivo do co-fator
+       soma += co_fator(matriz,linha,col) # calculo recursivo do co-fator
 
     return soma
 
@@ -159,3 +164,5 @@ def imprimir_determinante(matriz):
         print(f"Velor da determinante é: {det}") 
     else: 
         print("Matriz não é quadrada!")
+
+
