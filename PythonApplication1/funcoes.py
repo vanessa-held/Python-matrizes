@@ -61,34 +61,117 @@ def transposta(M):
     return T
 
 
-#matriz inversa
-    
-def matriz_inversa2(m):
-    det = det_matriz(m)
-    if det == 0:
-        print ("Determinte igual a zero")
+def matriz_inversa(matriz):
+    m_det = det_matriz(matriz)
+    if m_det == 0:
         return []
-    a = 1/det
-    b = mult_escalar (matrix_tamplate(m),a)
-   
-    return b
+    
+    a = 1/m_det
+    m_adjunta = gera_m_adjunta(matriz)
+    result = mult_escalar(m_adjunta,a)
+    return result
 
-def matrix_tamplate(m): #cria o formato da matriz
-    resultado = [[0, 0],[0, 0]]
-    resultado [0][0] = m[1][1]
-    resultado [0][1] = - m[0][1]
-    resultado [1][0] = - m[1][0]
-    resultado [1][1] = m[0][0]
 
-    return resultado
+def gera_m_adjunta(matriz):
+    matriz_cof = gera_m_cofator(matriz)
+    result = transposta(matriz_cof) 
+    return result
+
+
+def gera_m_cofator(matriz):
+    matriz_cof = [] # nova matriz com calculo do cofator
+    tam = len(matriz)
+    for l in range(tam):
+        a = []  
+        matriz_cof.append(a)
+        for c in range(tam):
+            cofator = co_fator(matriz,l,c)
+            a.append(cofator)
+    return matriz_cof   
+
 
 
 
 #função de subtração entre duas matrizes
 def subtrair(a,b): 
     return somar(a,mult_escalar(b,-1))
-    
 
+def metodo_da_matriz_inversa():
+    ordem = int(input("Informe a matriz de coeficiente. \n Informar o tamanho da matriz:"))
+    print("Digite a matriz (separe os elememtos da linha por espaço):")
+    matriz_coeficiente = ler_matriz(ordem)
+
+    print("Digite os termos independentes separados por enter: ")
+    t_independente =  ler_matriz(ordem)
+
+    det_coeficiente = det_matriz(matriz_coeficiente)
+    soma_t_independente = soma_itens(t_independente)
+
+    if det_coeficiente == 0 and soma_t_independente!=0:
+        print("Sistema impossível (SI)")
+    elif det_coeficiente ==0 and soma_t_independente==0:
+        print ("Sistema possível indeterminado (SPI)")
+    else:
+        print("Sistema possível determinado (SPD)")
+        resultado = matriz_mult(matriz_inversa(matriz_coeficiente),t_independente)
+
+        print(resultado)
+
+def soma_itens(matriz):
+    soma = 0
+    for linha in matriz:
+        for item in linha:
+            soma += item
+    return soma
+
+def metodo_de_cramer():
+    # Criação das matriz de coeficiente
+    ordem = int(input("Informe a matriz de coeficiente. \n Informar o tamanho da matriz:"))
+    print("Digite a matriz (separe os elememtos da linha por espaço):")
+    matriz_coeficiente = ler_matriz(ordem)
+
+    print("Digite os termos independentes separados por espaço: ")
+    t_independente =  ler_matriz(1)[0]
+
+    det_coeficiente = det_matriz(matriz_coeficiente)
+    soma_t_independente = sum(t_independente)
+
+    if det_coeficiente == 0 and soma_t_independente!=0:
+        print("Sistema impossível (SI)")
+    elif det_coeficiente ==0 and soma_t_independente==0:
+        print ("Sistema possível indeterminado (SPI)")
+    else:
+        print("Sistema possível determinado (SPD)")
+        matriz_result = [0]*ordem
+        for coluna in range (ordem):
+            m_copia = matriz_copia(matriz_coeficiente)
+            for linha in range (ordem):
+                m_copia[linha][coluna] = t_independente[linha]
+            det_cp = det_matriz(m_copia)
+            matriz_result [coluna] = det_cp / det_coeficiente
+        print(matriz_result)
+
+def ler_matriz(ordem):
+    matriz = []
+    for i in range(ordem):
+        linha_str = input()
+        linha = []
+        for i in linha_str.split():
+            linha.append(float(i))
+        matriz.append(linha)
+
+    return matriz
+
+def matriz_copia(m_origem):
+    linha = len(m_origem)
+    m_copia = []
+    for l in range(linha):
+        coluna = len(m_origem[l])
+        m_copia.append([0] * coluna)
+        for c in range(coluna):
+            m_copia[l][c] = m_origem[l][c]
+
+    return m_copia
 
 def informar_matriz():
     m = int (input ("Digite a quantidade de itens das linhas:")) 
@@ -98,7 +181,8 @@ def informar_matriz():
         matriz.append([0]*n) #cria a linha corrente mais as colunas
         for j in range (n): #varrendo as colunas
             matriz[i][j] = int (input (f"Digite o valor do elemento {i+1},{j+1}: ")) #pedindo as valores da matriz e atribuindo na posição correta
-    return matriz 
+    return matriz
+
 
 """
     matriz: matriz original 
@@ -124,11 +208,9 @@ def cria_matriz_cofator(matriz, linha, col):
 
 
 def co_fator(matriz,linha,col):
-    item = matriz[linha][col] # pegando os elementos da coluna 0
     cofator = 0
-    if item != 0:  #se o item igual a zero não realiza o calculo
-        mult = (-1)**(linha+col) # potencia do co-fator
-        cofator = mult * item * det_matriz(cria_matriz_cofator(matriz, linha, col)) # calculo recursivo do co-fator
+    mult = (-1)**(linha+col) # potencia do co-fator
+    cofator = mult * det_matriz(cria_matriz_cofator(matriz, linha, col)) # calculo recursivo do co-fator
     return cofator
 
 """
@@ -145,7 +227,9 @@ def det_matriz(matriz):
     col = 0 # fixando coluna em 0
     soma = 0 
     for linha in range(tam): 
-       soma += co_fator(matriz,linha,col) # calculo recursivo do co-fator
+       item = matriz[linha][col] # pegando os elementos da coluna 0
+       if item != 0:  #se o item igual a zero não realiza o calculo
+           soma += item * co_fator(matriz,linha,col) # calculo recursivo do co-fator
 
     return soma
 
@@ -164,5 +248,3 @@ def imprimir_determinante(matriz):
         print(f"Velor da determinante é: {det}") 
     else: 
         print("Matriz não é quadrada!")
-
-

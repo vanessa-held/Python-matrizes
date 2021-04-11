@@ -16,17 +16,17 @@ def lista_exercicios_matriz():
     #Resposta 3 [A+(B-Ct])*B-1]#
     r3 = subtrair(Matriz_B,transposta(Matriz_C))
     r3 = somar(Matriz_A,r3)
-    r3 = matriz_mult(r3,matriz_inversa2(Matriz_B))
+    r3 = matriz_mult(r3,matriz_inversa(Matriz_B))
     print(f"Resultado questão 3:\n {r3}\n")
   
 
     #Resposta 4 (A*A-1) = In#
-    r4 = matriz_mult(Matriz_A,matriz_inversa2(Matriz_A))
+    r4 = matriz_mult(Matriz_A,matriz_inversa(Matriz_A))
     print(f"Resultado questão 4:\n {r4}\n")
-    print(f' Resultado Matriz inversa: \n{matriz_inversa2(Matriz_A)}')
+    print(f' Resultado Matriz inversa: \n{matriz_inversa(Matriz_A)}')
 
     #Resposta  (b + At * C-1 -Bt) = In#
-    r5 = matriz_mult(transposta(Matriz_A), matriz_inversa2(Matriz_C)) # At*C-1
+    r5 = matriz_mult(transposta(Matriz_A), matriz_inversa(Matriz_C)) # At*C-1
     r5 = somar(Matriz_B,r5)
     r5 = subtrair(r5,transposta(Matriz_B))
     print (f"Resultado questão 5:\n {r5}\n")
@@ -51,10 +51,6 @@ def lista_exercios_determinante():
      print(f"Resultado questão 2:\n {final}")
 
 def lista_exercicios_laplace():
-    pass
-   
-if __name__ == '__main__':
-    
     #Questão A: informar matriz desejada.
     matriz = informar_matriz()
     print(f"matriz informada:\n {matriz}")
@@ -70,3 +66,12 @@ if __name__ == '__main__':
 
     #Questão E: Verificação de calculo da matriz.
     imprimir_determinante(matriz)
+
+
+if __name__ == '__main__':
+    
+    print("Executando o metodo da matriz inversa\n")
+    metodo_da_matriz_inversa()
+    print("\n-----------------------------------------\n")
+    print("Executando o metodo de Cramer\n")
+    metodo_de_cramer()
