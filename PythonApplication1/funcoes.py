@@ -248,3 +248,16 @@ def imprimir_determinante(matriz):
         print(f"Velor da determinante é: {det}") 
     else: 
         print("Matriz não é quadrada!")
+
+def gerar_identidade (tam):
+    result=[]
+    for lin in range (tam):
+        linha = []
+        result.append(linha)
+        for col in range (tam):
+            if lin == col:
+                linha.append (1)
+            else:
+                linha.append(0)
+
+    return result
