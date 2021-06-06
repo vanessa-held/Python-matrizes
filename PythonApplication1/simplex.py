@@ -108,12 +108,12 @@ if __name__ == '__main__':
         C1 = matriz_opera
 
         matriz_opera2 = F.matriz_mult(Cb, Bi)
-        #Cb = matriz_opera2
 
-        A = F.matriz_mult(Bi, A)
+
+
         b2 = F.matriz_mult(Bi, b2)
 
-    b = F.matriz_mult(Bi, b)
+    Rb = F.matriz_mult(Bi, b)
     Z = F.matriz_mult(Cb, Bi)
     Z = F.matriz_mult(Z, b)
     print(Z)
