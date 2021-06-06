@@ -64,32 +64,88 @@ def verificar_valores_negativos(matriz):
     return False
 
 
+def informar_matriz_restricoes(x):
+    n = int(input("Quantas restrições:"))
+    matriz = []
+    for i in range(x):  # varrendo os itens da linha
+        matriz.append([0] * n)  # cria a linha corrente mais as colunas
+        for j in range(n):  # varrendo as colunas
+            matriz[i][j] = int(input(
+                f"Digite o valor do elemento {i + 1},{j + 1}: "))  # pedindo as valores da matriz e atribuindo na posição correta
+    return matriz, n
+
+
+def informar_funcao_objetivo(m):
+    print("Informe os coeficieentes da função objetivo: ")
+    linha = []
+    for i in range(m):  # varrendo os itens da linha
+        valor = float(input())  # pedindo as valores da matriz e atribuindo na posição correta
+        linha.append(valor)
+    matriz = []
+    matriz.append(linha)
+    return matriz
+
+
+def informar_termos_independentes(n):
+    print("Informe os termos independentes: ")
+    linha = []
+    for i in range(n):  # varrendo os itens da linha
+        valor = float(input()) # pedindo as valores da matriz e atribuindo na posição correta
+        linha.append(valor)
+    matriz = []
+    matriz.append(linha)
+    return matriz
+
+def exemplo_manual():
+    m = int(input("Quantas variaveis de decisão tem o problema:"))
+    C = informar_funcao_objetivo(m)  #
+    A, n = informar_matriz_restricoes(m)
+    D = informar_termos_independentes(n)
+
+    return m, C, A, n, D
+
+def exemplo_1():
+    C =  [[1, 4, 2]]
+    m = len(C[0])
+    A = [[2, 2, 0], [1, 0, 3], [1, 1, 2]]
+    n = len(A)
+    D = [[20, 15, 40]]
+    return m, C, A, n, D
+
+def exemplo_2():
+    C = [[4, 1]]
+    m = len(C[0])
+    A = [[9, 1], [3, 1]]
+    n = len(A)
+    D = [[18, 12]]
+    return m, C, A, n, D
+
 if __name__ == '__main__':
-    C = [[1, 4, 2]]
-    X = F.transposta([["x1", "x2", "x3"]])
-    b = F.transposta([[20, 15, 40]])
-    Xb = F.transposta([["S1", "S2", "S3"]])
+    # m = int(input("Quantas variaveis de decisão tem o problema:"))
+    # C = informar_funcao_objetivo(m)  # [[1, 4, 2]]
+    # A, n = informar_matriz_restricoes(m)
+    # D = informar_termos_independentes(n)
 
-    A = [
-        [2, 2, 0],
-        [1, 0, 3],
-        [1, 1, 2], ]
+    m, C, A, n, D = exemplo_1()
+    #simplex
+    b = F.transposta(D)
+    X = F.transposta([[f'x{i}' for i in range(1, m + 1)]])
+    Xb = F.transposta([[f'S{i}' for i in range(1, n + 1)]])
 
-    B = F.gerar_identidade(3)
+    B = F.gerar_identidade(n)
 
-    Cb = [[0, 0, 0]]
+    Cb = [[0]*n]
 
     # Definir variaveis de base
 
     # Definir quem entra na base
-    b2 = b
     C1 = F.mult_escalar(C, -1)
     while verificar_valores_negativos(C1):
         l, coluna_entrada, valor_entrada = def_entra_base(C1)
         entra_na_base = F.transposta(X)[l][coluna_entrada]
 
         # Definir quem sai da base
-        linha_saida, val = def_sai_base(A, b2, coluna_entrada)
+        linha_saida, val = def_sai_base(A, b, coluna_entrada)
         Xb[linha_saida][0] = entra_na_base
 
         B = trocar_coluna(
@@ -108,10 +164,6 @@ if __name__ == '__main__':
         C1 = matriz_opera
 
         matriz_opera2 = F.matriz_mult(Cb, Bi)
-
-
-
-        b2 = F.matriz_mult(Bi, b2)
 
     Rb = F.matriz_mult(Bi, b)
     Z = F.matriz_mult(Cb, Bi)
