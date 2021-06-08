@@ -1,4 +1,5 @@
 import math
+from fractions import Fraction
 
 import funcoes as F
 
@@ -7,7 +8,6 @@ def def_entra_base(coeficientes_objetivo):
     lin = 0
     col = 0
     menor_elemento = coeficientes_objetivo[lin][col]
-
     tam_linha = len(coeficientes_objetivo)
     for l in range(tam_linha):
         tam_coluna = len(coeficientes_objetivo[l])
@@ -18,7 +18,7 @@ def def_entra_base(coeficientes_objetivo):
                 col = c
                 menor_elemento = atual
 
-    return lin, col, -1 * menor_elemento
+    return lin, col
 
 
 def def_sai_base(coeficiente_resticoes, termos_independentes, col_pivo):
@@ -70,7 +70,7 @@ def informar_matriz_restricoes(x):
     for i in range(x):  # varrendo os itens da linha
         matriz.append([0] * n)  # cria a linha corrente mais as colunas
         for j in range(n):  # varrendo as colunas
-            matriz[i][j] = int(input(
+            matriz[i][j] = Fraction(input(
                 f"Digite o valor do elemento {i + 1},{j + 1}: "))  # pedindo as valores da matriz e atribuindo na posição correta
     return matriz, n
 
@@ -79,7 +79,7 @@ def informar_funcao_objetivo(m):
     print("Informe os coeficieentes da função objetivo: ")
     linha = []
     for i in range(m):  # varrendo os itens da linha
-        valor = float(input())  # pedindo as valores da matriz e atribuindo na posição correta
+        valor = Fraction(input())  # pedindo as valores da matriz e atribuindo na posição correta
         linha.append(valor)
     matriz = []
     matriz.append(linha)
@@ -90,11 +90,12 @@ def informar_termos_independentes(n):
     print("Informe os termos independentes: ")
     linha = []
     for i in range(n):  # varrendo os itens da linha
-        valor = float(input()) # pedindo as valores da matriz e atribuindo na posição correta
+        valor = Fraction(input())  # pedindo as valores da matriz e atribuindo na posição correta
         linha.append(valor)
     matriz = []
     matriz.append(linha)
     return matriz
+
 
 def exemplo_manual():
     # m = int(input("Quantas variaveis de decisão tem o problema:"))
@@ -109,20 +110,24 @@ def exemplo_manual():
 
     return m, C, A, n, b
 
+
 def exemplo_1():
-    C =  [[1, 4, 2]]
+    C = [[Fraction(1), Fraction(4), Fraction(2)]]
     m = len(C[0])
-    A = [[2, 2, 0], [1, 0, 3], [1, 1, 2]]
+    A = [[Fraction(2), Fraction(2), Fraction(0)],
+         [Fraction(1), Fraction(0), Fraction(3)],
+         [Fraction(1), Fraction(1), Fraction(2)]]
     n = len(A)
-    b = [[20, 15, 40]]
+    b = [[Fraction(20), Fraction(15), Fraction(40)]]
     return m, C, A, n, b
 
+
 def exemplo_2():
-    C = [[4, 1]]
+    C = [[Fraction(4), Fraction(1)]]
     m = len(C[0])
-    A = [[9, 1], [3, 1]]
+    A = [[Fraction(9), Fraction(1)], [Fraction(3), Fraction(1)]]
     n = len(A)
-    b = [[18, 12]]
+    b = [[Fraction(18), Fraction(12)]]
     return m, C, A, n, b
 
 
@@ -144,7 +149,11 @@ def print_variaveis_fora_base(X):
             print(f"{X[l][c]} = 0")
 
 
-def simplex(m, C, A, n, b):
+def simplex_min(m, C, A, n, b):
+    return simplex_max(m, F.mult_escalar(C, -1), A, n, b)
+
+
+def simplex_max(m, C, A, n, b):
     b = F.transposta(b)
     X = F.transposta([[f'X{i}' for i in range(1, m + 1)]])
     Xb = F.transposta([[f'S{i}' for i in range(1, n + 1)]])
@@ -154,7 +163,7 @@ def simplex(m, C, A, n, b):
     # Definir quem entra na base
     C1 = F.mult_escalar(C, -1)
     while verificar_valores_negativos(C1):
-        l, entra, valor_entrada = def_entra_base(C1)
+        l, entra = def_entra_base(C1)
         entra_na_base = F.transposta(X)[l][entra]
 
         # Definir quem sai da base
@@ -171,28 +180,32 @@ def simplex(m, C, A, n, b):
             entra
         )
         Bi = F.matriz_inversa(B)
-        Cb[0][sai] = valor_entrada
+        Cb[0][sai] = C[0][entra]
 
         matriz_opera = F.matriz_mult(Cb, Bi)
         matriz_opera = F.matriz_mult(matriz_opera, A)
-        matriz_opera = F.somar(matriz_opera, C1)
+        matriz_opera = F.subtrair(matriz_opera, C)
         C1 = matriz_opera
 
-        matriz_opera2 = F.matriz_mult(Cb, Bi)
-    Rb = F.matriz_mult(Bi, b)
-    Z = F.matriz_mult(Cb, Bi)
-    Z = F.matriz_mult(Z, b)
+        Rb = F.matriz_mult(Bi, b)
+
+        Z = F.matriz_mult(Cb, Bi)
+        Z = F.matriz_mult(Z, b)
+        print(C1)
+        print(Cb)
+        print(Rb)
+        print(Bi)
+        print(B)
+        print(Z)
+        print()
 
     return X, Xb, Rb, Z
 
 
 if __name__ == '__main__':
     m, C, A, n, b = exemplo_1()
-    X, Xb, Rb, Z = simplex(m, C, A, n, b)
+    X, Xb, Rb, Z = simplex_max(m, C, A, n, b)
 
     print_solucao_otima(Z)
     print_variaveis_na_base(Xb, Rb)
     print_variaveis_fora_base(X)
-
-
-
